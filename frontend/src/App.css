@@ -1,4 +1,4 @@
-/* Main App Styles - Industrial Control Room Theme */
+/* Main App Styles - Tablet Friendly Industrial Theme */
 
 .app-container {
   min-height: 100vh;
@@ -7,86 +7,159 @@
   font-family: 'IBM Plex Sans', sans-serif;
 }
 
-/* Grid Layout */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+.app-shell {
+  width: min(100%, 1440px);
+  margin: 0 auto;
   padding: 1rem;
 }
 
-@media (min-width: 1024px) {
-  .main-grid {
-    grid-template-columns: 320px 1fr;
-    padding: 1.5rem;
-  }
+.app-section {
+  margin-bottom: 1rem;
 }
 
-@media (min-width: 1280px) {
+.app-section-bottom {
+  padding-bottom: 1.5rem;
+}
+
+/* Main Layout */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.main-grid-sidebar,
+.main-grid-content {
+  min-width: 0;
+}
+
+/* Keep single column for portrait tablet / smaller landscape */
+@media (min-width: 1180px) {
   .main-grid {
-    padding: 2rem;
+    grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+    align-items: start;
   }
 }
 
 /* Sidebar Panel */
 .sidebar-panel {
-  background-color: rgba(24, 24, 27, 0.5);
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.78), rgba(18, 18, 18, 0.88));
   backdrop-filter: blur(12px);
   border: 1px solid #27272A;
-  padding: 1.5rem;
+  border-radius: 18px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   height: fit-content;
+}
+
+.sidebar-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+}
+
+.sidebar-block {
+  background-color: rgba(9, 9, 11, 0.9);
+  border: 1px solid #27272A;
+  border-radius: 14px;
+  padding: 0.9rem;
+}
+
+.sidebar-block-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) and (max-width: 1179px) {
+  .sidebar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sidebar-block.span-2 {
+    grid-column: span 2;
+  }
 }
 
 /* Map Container */
 .map-container {
   background-color: #000000;
   border: 1px solid #27272A;
-  overflow: auto;
+  border-radius: 20px;
+  overflow: hidden;
   position: relative;
-  min-height: 60vh;
-  max-height: 75vh;
+  min-height: 58vh;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
 }
 
 .map-header {
   position: sticky;
   top: 0;
   left: 0;
-  background-color: rgba(10, 10, 10, 0.95);
+  background-color: rgba(10, 10, 10, 0.96);
   backdrop-filter: blur(8px);
-  padding: 1rem 1.5rem;
+  padding: 1rem;
   border-bottom: 1px solid #27272A;
   z-index: 20;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.map-actions {
+  display: flex;
   align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.map-body {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.75rem;
+}
+
+.map-grid-frame {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.map-help-text {
+  padding: 0.75rem 1rem 0;
+  font-size: 12px;
+  color: #A1A1AA;
 }
 
 /* Warehouse Grid */
 .warehouse-grid {
   display: grid;
-  grid-template-columns: repeat(30, minmax(20px, 1fr));
+  grid-template-columns: repeat(30, minmax(22px, 1fr));
   gap: 2px;
-  padding: 1rem;
-  min-width: 700px;
+  padding: 0.5rem;
+  min-width: 720px;
+  width: max-content;
 }
 
 .grid-cell {
   aspect-ratio: 1;
-  min-width: 20px;
-  min-height: 20px;
+  min-width: 22px;
+  min-height: 22px;
   transition: all 0.15s ease;
   cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .grid-cell:hover {
-  transform: scale(1.15);
+  transform: scale(1.1);
   z-index: 10;
 }
 
@@ -174,28 +247,34 @@
 /* Stats Cards */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.875rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 .stat-card {
-  background-color: #121212;
+  background: linear-gradient(180deg, #121212 0%, #0f0f10 100%);
   border: 1px solid #27272A;
+  border-radius: 18px;
   padding: 1rem;
   text-align: center;
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .stat-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.5rem;
+  font-size: clamp(1.35rem, 2vw, 2rem);
   font-weight: 700;
   color: #FFFFFF;
+  line-height: 1.1;
 }
 
 .stat-label {
@@ -203,20 +282,22 @@
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: #71717A;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
 }
 
 /* Search Results */
 .search-results {
-  max-height: 300px;
+  max-height: 280px;
   overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .result-item {
-  padding: 0.75rem;
+  padding: 0.85rem;
   border: 1px solid #27272A;
   background-color: #121212;
   margin-bottom: 0.5rem;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -231,16 +312,23 @@
   background-color: rgba(0, 229, 255, 0.1);
 }
 
-/* Inventory Table */
+/* Inventory */
 .inventory-section {
-  background-color: rgba(24, 24, 27, 0.3);
+  background-color: rgba(24, 24, 27, 0.5);
   border: 1px solid #27272A;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.inventory-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .inventory-table {
   width: 100%;
+  min-width: 980px;
   border-collapse: collapse;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -257,26 +345,125 @@
   letter-spacing: 0.1em;
   color: #A1A1AA;
   border-bottom: 1px solid #27272A;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .inventory-table td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #1F1F23;
   color: #E4E4E7;
+  vertical-align: middle;
 }
 
 .inventory-table tr:hover td {
   background-color: rgba(39, 39, 42, 0.5);
 }
 
+.inventory-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+}
+
+.inventory-card {
+  background-color: #121212;
+  border: 1px solid #27272A;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.inventory-card.selected {
+  border-color: #00E5FF;
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.25);
+}
+
+.inventory-card-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.inventory-card-title {
+  font-family: 'JetBrains Mono', monospace;
+  color: #22d3ee;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.inventory-card-subtitle {
+  font-size: 0.8rem;
+  color: #A1A1AA;
+  margin-top: 0.15rem;
+}
+
+.inventory-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.inventory-card-meta {
+  background-color: #0b0b0c;
+  border: 1px solid #202024;
+  border-radius: 12px;
+  padding: 0.65rem;
+}
+
+.inventory-card-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #71717A;
+  margin-bottom: 0.35rem;
+}
+
+.inventory-card-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: #FFFFFF;
+  word-break: break-word;
+}
+
+.inventory-card-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.inventory-card-actions button {
+  flex: 1;
+}
+
+.desktop-only {
+  display: none;
+}
+
+.mobile-only {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .desktop-only {
+    display: block;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+}
+
 /* Legend */
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0.75rem;
+  gap: 0.875rem 1rem;
+  padding: 0.875rem 1rem 1rem;
   background-color: #121212;
-  border: 1px solid #27272A;
+  border-top: 1px solid #27272A;
 }
 
 .legend-item {
@@ -290,38 +477,36 @@
 .legend-color {
   width: 16px;
   height: 16px;
-  border-radius: 2px;
+  border-radius: 4px;
+}
+
+.legend-note {
+  margin-left: auto;
+  font-size: 12px;
+  color: #71717A;
+  min-width: 220px;
+}
+
+@media (max-width: 900px) {
+  .legend-note {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 /* Path Info */
 .path-info {
   background-color: rgba(0, 229, 255, 0.1);
   border: 1px solid #00E5FF;
+  border-radius: 14px;
   padding: 1rem;
-  margin-top: 1rem;
 }
 
 .path-distance {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: #00E5FF;
-}
-
-/* Tooltip */
-.cell-tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #1A1A1A;
-  border: 1px solid #3f3f46;
-  padding: 0.5rem 0.75rem;
-  font-size: 11px;
-  white-space: nowrap;
-  z-index: 100;
-  pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* Loading state */
@@ -354,7 +539,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  padding: 3rem 1rem;
   text-align: center;
   color: #71717A;
 }
@@ -363,4 +548,47 @@
   font-size: 3rem;
   margin-bottom: 1rem;
   opacity: 0.5;
+}
+
+/* Tablet / phone tweaks */
+@media (max-width: 767px) {
+  .app-shell {
+    padding: 0.75rem;
+  }
+
+  .app-section {
+    margin-bottom: 0.75rem;
+  }
+
+  .sidebar-panel,
+  .inventory-section {
+    padding: 0.875rem;
+    border-radius: 16px;
+  }
+
+  .map-container {
+    border-radius: 16px;
+    min-height: 55vh;
+  }
+
+  .map-header {
+    padding: 0.875rem;
+  }
+
+  .warehouse-grid {
+    min-width: 660px;
+  }
+
+  .grid-cell {
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  .inventory-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .path-distance {
+    font-size: 1.5rem;
+  }
 }

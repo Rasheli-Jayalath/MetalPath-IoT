@@ -10,27 +10,26 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
 
   const sortedSheets = useMemo(() => {
     if (!sheets) return [];
-    
+
     return [...sheets].sort((a, b) => {
       let aVal = a[sortField];
       let bVal = b[sortField];
-      
+
       if (typeof aVal === 'string') {
         aVal = aVal.toLowerCase();
         bVal = bVal.toLowerCase();
       }
-      
+
       if (sortDirection === 'asc') {
         return aVal > bVal ? 1 : -1;
-      } else {
-        return aVal < bVal ? 1 : -1;
       }
+      return aVal < bVal ? 1 : -1;
     });
   }, [sheets, sortField, sortDirection]);
 
   const handleSort = (field) => {
     if (sortField === field) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
       setSortDirection('asc');
@@ -39,7 +38,7 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
 
   const SortIcon = ({ field }) => {
     if (sortField !== field) return null;
-    return sortDirection === 'asc' 
+    return sortDirection === 'asc'
       ? <ChevronUp className="w-3 h-3 inline ml-1" />
       : <ChevronDown className="w-3 h-3 inline ml-1" />;
   };
@@ -69,116 +68,182 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
     );
   }
 
+  const previewSheets = sortedSheets.slice(0, 100);
+
   return (
     <div className="inventory-section" data-testid="inventory-table">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-heading text-lg font-bold">Inventory</h3>
+      <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="font-heading text-lg font-bold">Inventory</h3>
+          <p className="text-sm text-zinc-500">Tap a sheet to view or navigate.</p>
+        </div>
         <span className="text-sm text-zinc-500 font-mono">{sheets.length} items</span>
       </div>
-      
-      <ScrollArea className="h-[400px]">
-        <table className="inventory-table">
-          <thead>
-            <tr>
-              <th 
-                className="cursor-pointer hover:text-white"
-                onClick={() => handleSort('sheet_id')}
-              >
-                Sheet ID <SortIcon field="sheet_id" />
-              </th>
-              <th 
-                className="cursor-pointer hover:text-white"
-                onClick={() => handleSort('type')}
-              >
-                Type <SortIcon field="type" />
-              </th>
-              <th 
-                className="cursor-pointer hover:text-white"
-                onClick={() => handleSort('material_grade')}
-              >
-                Grade <SortIcon field="material_grade" />
-              </th>
-              <th 
-                className="cursor-pointer hover:text-white"
-                onClick={() => handleSort('size')}
-              >
-                Size <SortIcon field="size" />
-              </th>
-              <th 
-                className="cursor-pointer hover:text-white text-right"
-                onClick={() => handleSort('weight')}
-              >
-                Weight (kg) <SortIcon field="weight" />
-              </th>
-              <th 
-                className="cursor-pointer hover:text-white text-right"
-                onClick={() => handleSort('thickness')}
-              >
-                Thickness (mm) <SortIcon field="thickness" />
-              </th>
-              <th 
-                className="cursor-pointer hover:text-white text-right"
-                onClick={() => handleSort('stock_quantity')}
-              >
-                Qty <SortIcon field="stock_quantity" />
-              </th>
-              <th>Location</th>
-              <th>IoT Status</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedSheets.slice(0, 100).map((sheet) => (
-              <tr 
+
+      <div className="mobile-only">
+        <ScrollArea className="h-[560px] pr-1">
+          <div className="inventory-cards">
+            {previewSheets.map((sheet) => (
+              <div
                 key={sheet.id}
-                className={selectedSheet?.id === sheet.id ? 'bg-cyan-500/10' : ''}
+                className={`inventory-card ${selectedSheet?.id === sheet.id ? 'selected' : ''}`}
                 data-testid={`inventory-row-${sheet.sheet_id}`}
               >
-                <td className="text-cyan-400">{sheet.sheet_id}</td>
-                <td>{sheet.type}</td>
-                <td>{sheet.material_grade}</td>
-                <td>{sheet.size}</td>
-                <td className="text-right">{sheet.weight}</td>
-                <td className="text-right">{sheet.thickness}</td>
-                <td className="text-right">{sheet.stock_quantity}</td>
-                <td>
-                  <span className="text-zinc-400">
-                    ({sheet.location_x}, {sheet.location_y})
-                  </span>
-                </td>
-                <td>{getIotBadge(sheet.iot_status)}</td>
-                <td className="text-center">
-                  <div className="flex items-center justify-center gap-1">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-7 w-7 hover:bg-zinc-800"
-                      onClick={() => onSelectSheet(sheet)}
-                      data-testid={`view-sheet-${sheet.sheet_id}`}
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-7 w-7 hover:bg-cyan-500/20 hover:text-cyan-400"
-                      onClick={() => onNavigateTo(sheet)}
-                      data-testid={`navigate-to-${sheet.sheet_id}`}
-                    >
-                      <Navigation className="h-3.5 w-3.5" />
-                    </Button>
+                <div className="inventory-card-header">
+                  <div>
+                    <div className="inventory-card-title">{sheet.sheet_id}</div>
+                    <div className="inventory-card-subtitle">{sheet.type}</div>
                   </div>
-                </td>
-              </tr>
+                  {getIotBadge(sheet.iot_status)}
+                </div>
+
+                <div className="inventory-card-grid">
+                  <div className="inventory-card-meta">
+                    <div className="inventory-card-label">Grade</div>
+                    <div className="inventory-card-value">{sheet.material_grade}</div>
+                  </div>
+                  <div className="inventory-card-meta">
+                    <div className="inventory-card-label">Size</div>
+                    <div className="inventory-card-value">{sheet.size}</div>
+                  </div>
+                  <div className="inventory-card-meta">
+                    <div className="inventory-card-label">Weight</div>
+                    <div className="inventory-card-value">{sheet.weight} kg</div>
+                  </div>
+                  <div className="inventory-card-meta">
+                    <div className="inventory-card-label">Thickness</div>
+                    <div className="inventory-card-value">{sheet.thickness} mm</div>
+                  </div>
+                  <div className="inventory-card-meta">
+                    <div className="inventory-card-label">Quantity</div>
+                    <div className="inventory-card-value">{sheet.stock_quantity}</div>
+                  </div>
+                  <div className="inventory-card-meta">
+                    <div className="inventory-card-label">Location</div>
+                    <div className="inventory-card-value">({sheet.location_x}, {sheet.location_y})</div>
+                  </div>
+                </div>
+
+                <div className="inventory-card-actions">
+                  <Button
+                    variant="ghost"
+                    className="min-h-[44px] hover:bg-zinc-800"
+                    onClick={() => onSelectSheet(sheet)}
+                    data-testid={`view-sheet-${sheet.sheet_id}`}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    View
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    className="min-h-[44px] hover:bg-cyan-500/20 hover:text-cyan-400"
+                    onClick={() => onNavigateTo(sheet)}
+                    data-testid={`navigate-to-${sheet.sheet_id}`}
+                  >
+                    <Navigation className="h-4 w-4 mr-2" />
+                    Navigate
+                  </Button>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-        {sheets.length > 100 && (
-          <div className="text-center py-4 text-sm text-zinc-500">
-            Showing 100 of {sheets.length} items
           </div>
-        )}
-      </ScrollArea>
+
+          {sheets.length > 100 && (
+            <div className="text-center py-4 text-sm text-zinc-500">
+              Showing 100 of {sheets.length} items
+            </div>
+          )}
+        </ScrollArea>
+      </div>
+
+      <div className="desktop-only">
+        <ScrollArea className="h-[480px]">
+          <div className="inventory-table-wrap">
+            <table className="inventory-table">
+              <thead>
+                <tr>
+                  <th className="cursor-pointer hover:text-white" onClick={() => handleSort('sheet_id')}>
+                    Sheet ID <SortIcon field="sheet_id" />
+                  </th>
+                  <th className="cursor-pointer hover:text-white" onClick={() => handleSort('type')}>
+                    Type <SortIcon field="type" />
+                  </th>
+                  <th className="cursor-pointer hover:text-white" onClick={() => handleSort('material_grade')}>
+                    Grade <SortIcon field="material_grade" />
+                  </th>
+                  <th className="cursor-pointer hover:text-white" onClick={() => handleSort('size')}>
+                    Size <SortIcon field="size" />
+                  </th>
+                  <th className="cursor-pointer hover:text-white text-right" onClick={() => handleSort('weight')}>
+                    Weight (kg) <SortIcon field="weight" />
+                  </th>
+                  <th className="cursor-pointer hover:text-white text-right" onClick={() => handleSort('thickness')}>
+                    Thickness (mm) <SortIcon field="thickness" />
+                  </th>
+                  <th className="cursor-pointer hover:text-white text-right" onClick={() => handleSort('stock_quantity')}>
+                    Qty <SortIcon field="stock_quantity" />
+                  </th>
+                  <th>Location</th>
+                  <th>IoT Status</th>
+                  <th className="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {previewSheets.map((sheet) => (
+                  <tr
+                    key={sheet.id}
+                    className={selectedSheet?.id === sheet.id ? 'bg-cyan-500/10' : ''}
+                    data-testid={`inventory-row-${sheet.sheet_id}`}
+                  >
+                    <td className="text-cyan-400">{sheet.sheet_id}</td>
+                    <td>{sheet.type}</td>
+                    <td>{sheet.material_grade}</td>
+                    <td>{sheet.size}</td>
+                    <td className="text-right">{sheet.weight}</td>
+                    <td className="text-right">{sheet.thickness}</td>
+                    <td className="text-right">{sheet.stock_quantity}</td>
+                    <td>
+                      <span className="text-zinc-400">
+                        ({sheet.location_x}, {sheet.location_y})
+                      </span>
+                    </td>
+                    <td>{getIotBadge(sheet.iot_status)}</td>
+                    <td className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 hover:bg-zinc-800"
+                          onClick={() => onSelectSheet(sheet)}
+                          data-testid={`view-sheet-${sheet.sheet_id}`}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 hover:bg-cyan-500/20 hover:text-cyan-400"
+                          onClick={() => onNavigateTo(sheet)}
+                          data-testid={`navigate-to-${sheet.sheet_id}`}
+                        >
+                          <Navigation className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {sheets.length > 100 && (
+            <div className="text-center py-4 text-sm text-zinc-500">
+              Showing 100 of {sheets.length} items
+            </div>
+          )}
+        </ScrollArea>
+      </div>
     </div>
   );
 };

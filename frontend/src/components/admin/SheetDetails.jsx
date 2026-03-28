@@ -22,28 +22,29 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
   const formatDate = (dateStr) => {
     if (!dateStr) return 'N/A';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
     });
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center z-50 p-0 md:p-4"
+    <div 
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={onClose}
       data-testid="sheet-details-modal"
     >
-      <div
-        className="bg-zinc-900 border border-zinc-700 w-full md:max-w-xl rounded-t-2xl md:rounded-2xl max-h-[92vh] overflow-y-auto"
+      <div 
+        className="bg-zinc-900 border border-zinc-700 w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 border-b border-zinc-800 sticky top-0 bg-zinc-900 z-10">
-          <div className="flex items-center gap-3 min-w-0">
-            <Package className="w-5 h-5 text-cyan-500 shrink-0" />
-            <div className="min-w-0">
-              <h3 className="font-heading font-bold text-lg truncate">{sheet.sheet_id}</h3>
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+          <div className="flex items-center gap-3">
+            <Package className="w-5 h-5 text-cyan-500" />
+            <div>
+              <h3 className="font-heading font-bold text-lg">{sheet.sheet_id}</h3>
               <p className="text-xs text-zinc-500">{sheet.type}</p>
             </div>
           </div>
@@ -51,17 +52,19 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
             size="icon"
             variant="ghost"
             onClick={onClose}
-            className="h-10 w-10 hover:bg-zinc-800"
+            className="h-8 w-8 hover:bg-zinc-800"
             data-testid="close-details-btn"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
+        {/* Content */}
         <div className="p-4 space-y-4">
-          <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-xl">
+          {/* Location */}
+          <div className="bg-zinc-950 p-4 border border-zinc-800">
             <div className="data-label mb-2">Location</div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between">
               <span className="font-mono text-2xl text-white">
                 ({sheet.location_x}, {sheet.location_y})
               </span>
@@ -69,8 +72,9 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-zinc-950 p-3 border border-zinc-800 rounded-xl">
+          {/* Specs Grid */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-zinc-950 p-3 border border-zinc-800">
               <div className="flex items-center gap-2 mb-1">
                 <Ruler className="w-3 h-3 text-zinc-500" />
                 <span className="data-label">Size</span>
@@ -78,7 +82,7 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
               <div className="font-mono text-white">{sheet.size}</div>
             </div>
 
-            <div className="bg-zinc-950 p-3 border border-zinc-800 rounded-xl">
+            <div className="bg-zinc-950 p-3 border border-zinc-800">
               <div className="flex items-center gap-2 mb-1">
                 <Scale className="w-3 h-3 text-zinc-500" />
                 <span className="data-label">Weight</span>
@@ -86,7 +90,7 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
               <div className="font-mono text-white">{sheet.weight} kg</div>
             </div>
 
-            <div className="bg-zinc-950 p-3 border border-zinc-800 rounded-xl">
+            <div className="bg-zinc-950 p-3 border border-zinc-800">
               <div className="flex items-center gap-2 mb-1">
                 <Layers className="w-3 h-3 text-zinc-500" />
                 <span className="data-label">Thickness</span>
@@ -94,7 +98,7 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
               <div className="font-mono text-white">{sheet.thickness} mm</div>
             </div>
 
-            <div className="bg-zinc-950 p-3 border border-zinc-800 rounded-xl">
+            <div className="bg-zinc-950 p-3 border border-zinc-800">
               <div className="flex items-center gap-2 mb-1">
                 <Package className="w-3 h-3 text-zinc-500" />
                 <span className="data-label">Stock</span>
@@ -103,7 +107,8 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
             </div>
           </div>
 
-          <div className="bg-zinc-950 p-3 border border-zinc-800 rounded-xl">
+          {/* Additional Info */}
+          <div className="bg-zinc-950 p-3 border border-zinc-800">
             <div className="flex items-center gap-2 mb-1">
               <Wifi className="w-3 h-3 text-zinc-500" />
               <span className="data-label">Material Grade</span>
@@ -111,7 +116,7 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
             <div className="font-mono text-white">{sheet.material_grade}</div>
           </div>
 
-          <div className="bg-zinc-950 p-3 border border-zinc-800 rounded-xl">
+          <div className="bg-zinc-950 p-3 border border-zinc-800">
             <div className="flex items-center gap-2 mb-1">
               <Calendar className="w-3 h-3 text-zinc-500" />
               <span className="data-label">Date Added</span>
@@ -120,10 +125,11 @@ export const SheetDetails = ({ sheet, onClose, onNavigate }) => {
           </div>
         </div>
 
-        <div className="p-4 border-t border-zinc-800 sticky bottom-0 bg-zinc-900">
+        {/* Footer */}
+        <div className="p-4 border-t border-zinc-800">
           <Button
             onClick={() => onNavigate(sheet)}
-            className="w-full btn-primary min-h-[48px]"
+            className="w-full btn-primary h-10"
             data-testid="navigate-to-sheet-btn"
           >
             <Navigation className="w-4 h-4 mr-2" />

@@ -251,24 +251,3 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     @apply bg-background text-foreground;
   }
 }
-
-html,
-body,
-#root {
-  min-height: 100%;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-button,
-input,
-select,
-textarea {
-  touch-action: manipulation;
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
-}
