@@ -10,8 +10,8 @@ import StatsPanel from './components/StatsPanel';
 import InventoryTable from './components/InventoryTable';
 import SheetDetails from './components/SheetDetails';
 
-REACT_APP_BACKEND_URL= "http://localhost:8000";
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const REACT_APP_BACKEND_URL = "http://localhost:8000";
+const BACKEND_URL = REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 function App() {
