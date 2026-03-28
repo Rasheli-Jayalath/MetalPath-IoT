@@ -1,0 +1,366 @@
+/* Main App Styles - Industrial Control Room Theme */
+
+.app-container {
+  min-height: 100vh;
+  background-color: #0A0A0A;
+  color: #FFFFFF;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Grid Layout */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 320px 1fr;
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .main-grid {
+    padding: 2rem;
+  }
+}
+
+/* Sidebar Panel */
+.sidebar-panel {
+  background-color: rgba(24, 24, 27, 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid #27272A;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: fit-content;
+}
+
+/* Map Container */
+.map-container {
+  background-color: #000000;
+  border: 1px solid #27272A;
+  overflow: auto;
+  position: relative;
+  min-height: 60vh;
+  max-height: 75vh;
+}
+
+.map-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  background-color: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #27272A;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Warehouse Grid */
+.warehouse-grid {
+  display: grid;
+  grid-template-columns: repeat(30, minmax(20px, 1fr));
+  gap: 2px;
+  padding: 1rem;
+  min-width: 700px;
+}
+
+.grid-cell {
+  aspect-ratio: 1;
+  min-width: 20px;
+  min-height: 20px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-cell:hover {
+  transform: scale(1.15);
+  z-index: 10;
+}
+
+.cell-empty {
+  background-color: #0A0A0A;
+  border: 1px solid #18181B;
+}
+
+.cell-aisle {
+  background-color: #0F0F10;
+  border: 1px dashed #1F1F23;
+}
+
+.cell-shelf {
+  background-color: #27272A;
+  border: 1px solid #3f3f46;
+}
+
+.cell-shelf.iot-active {
+  border-color: #10B981;
+}
+
+.cell-shelf.iot-inactive {
+  opacity: 0.6;
+}
+
+.cell-shelf.iot-maintenance {
+  border-color: #F59E0B;
+}
+
+.cell-target {
+  background-color: #FBBF24 !important;
+  border: 2px solid #F59E0B !important;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+}
+
+.cell-path {
+  background-color: #00E5FF !important;
+  border-color: #00E5FF !important;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+.cell-worker {
+  background-color: #FF3B30 !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 0 15px rgba(255, 59, 48, 0.6);
+  z-index: 15;
+}
+
+.cell-duplicate {
+  background-color: #8B5CF6 !important;
+  border: 2px solid #A78BFA !important;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+/* IoT Status Indicator */
+.iot-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.iot-indicator.active {
+  background-color: #10B981;
+  box-shadow: 0 0 4px #10B981;
+}
+
+.iot-indicator.inactive {
+  background-color: #6B7280;
+}
+
+.iot-indicator.maintenance {
+  background-color: #F59E0B;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  background-color: #121212;
+  border: 1px solid #27272A;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #71717A;
+  margin-top: 0.25rem;
+}
+
+/* Search Results */
+.search-results {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.result-item {
+  padding: 0.75rem;
+  border: 1px solid #27272A;
+  background-color: #121212;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.result-item:hover {
+  background-color: #1A1A1A;
+  border-color: #3f3f46;
+}
+
+.result-item.selected {
+  border-color: #00E5FF;
+  background-color: rgba(0, 229, 255, 0.1);
+}
+
+/* Inventory Table */
+.inventory-section {
+  background-color: rgba(24, 24, 27, 0.3);
+  border: 1px solid #27272A;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.inventory-table th {
+  background-color: #121212;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-family: 'Chivo', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #A1A1AA;
+  border-bottom: 1px solid #27272A;
+}
+
+.inventory-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #1F1F23;
+  color: #E4E4E7;
+}
+
+.inventory-table tr:hover td {
+  background-color: rgba(39, 39, 42, 0.5);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: #121212;
+  border: 1px solid #27272A;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 12px;
+  color: #A1A1AA;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+/* Path Info */
+.path-info {
+  background-color: rgba(0, 229, 255, 0.1);
+  border: 1px solid #00E5FF;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.path-distance {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00E5FF;
+}
+
+/* Tooltip */
+.cell-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1A1A1A;
+  border: 1px solid #3f3f46;
+  padding: 0.5rem 0.75rem;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Loading state */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(10, 10, 10, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #27272A;
+  border-top-color: #00E5FF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #71717A;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
