@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-03-28T08:49:02.920260",
+  "total_tests": 11,
+  "passed_tests": 11,
+  "success_rate": 100.0,
+  "test_details": [
+    {
+      "test": "Health Check",
+      "success": true,
+      "details": "Status: 200, Response: healthy"
+    },
+    {
+      "test": "Generate Synthetic Data",
+      "success": true,
+      "details": "Status: 200, Sheets: 500, Shelves: 500"
+    },
+    {
+      "test": "Get All Sheets",
+      "success": true,
+      "details": "Status: 200, Total sheets: 500"
+    },
+    {
+      "test": "Warehouse Stats",
+      "success": true,
+      "details": "Status: 200, Sheets: 500, Stock: 13096, Active IoT: 409, Inactive IoT: 91"
+    },
+    {
+      "test": "Warehouse Map",
+      "success": true,
+      "details": "Status: 200, Grid: 30x30, Shelves: 500, Positions: 500"
+    },
+    {
+      "test": "Filter Options",
+      "success": true,
+      "details": "Status: 200, Types: 7, Grades: 10, Sizes: 8"
+    },
+    {
+      "test": "Search Sheets (by type)",
+      "success": true,
+      "details": "Status: 200, Found 70 Steel sheets"
+    },
+    {
+      "test": "Search Sheets (by query)",
+      "success": true,
+      "details": "Query search found 1 sheets"
+    },
+    {
+      "test": "Find Duplicates",
+      "success": true,
+      "details": "Status: 200, Found 70 Steel duplicates, Nearest at distance 4"
+    },
+    {
+      "test": "Calculate Path",
+      "success": true,
+      "details": "Status: 200, Distance: 10, Path steps: 10"
+    },
+    {
+      "test": "Get Sheet by ID",
+      "success": true,
+      "details": "Status: 200, Sheet ID: SH-0001"
+    }
+  ]
+}

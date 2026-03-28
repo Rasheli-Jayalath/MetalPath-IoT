@@ -1,0 +1,89 @@
+{
+  "theme": "Dark Mode",
+  "archetype": "Archetype 2: The Performance Pro (Tactical Minimalism / Industrial Control Room)",
+  "vibe": "Rugged, precise, highly legible, high-tech industrial. Feels like software used in a multi-million dollar logistics facility.",
+  "colors": {
+    "background": "#0A0A0A",
+    "surface": "#121212",
+    "surface_elevated": "#1A1A1A",
+    "border": "#27272A",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#A1A1AA",
+    "primary": "#FF3B30",
+    "primary_hover": "#D32F2F",
+    "secondary": "#007AFF",
+    "secondary_hover": "#005BB5",
+    "status": {
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "danger": "#EF4444",
+      "iot_active": "#00E5FF",
+      "path_glow": "rgba(0, 229, 255, 0.4)"
+    }
+  },
+  "typography": {
+    "strategy": "The Swiss Brutalist (Tech / Industrial)",
+    "font_families": {
+      "headings": "Chivo",
+      "body": "IBM Plex Sans",
+      "mono": "JetBrains Mono"
+    },
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl font-black tracking-tighter",
+      "h2": "text-2xl sm:text-3xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-sm text-text_secondary leading-relaxed",
+      "data_labels": "text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500"
+    }
+  },
+  "layout_and_spacing": {
+    "strategy": "MODE B: THE CONTROL ROOM GRID",
+    "container": "min-h-screen bg-background text-text_primary p-4 md:p-6 lg:p-8 font-body",
+    "grid_structure": "grid grid-cols-1 lg:grid-cols-4 gap-6",
+    "panels": {
+      "sidebar": "col-span-1 border border-zinc-800 bg-zinc-900/50 backdrop-blur-md p-6 flex flex-col gap-6 rounded-sm",
+      "main_map": "col-span-1 lg:col-span-3 border border-zinc-800 bg-black overflow-hidden relative min-h-[60vh] flex flex-col rounded-sm",
+      "inventory_dashboard": "col-span-1 lg:col-span-4 border border-zinc-800 bg-zinc-900/30 p-6 rounded-sm"
+    },
+    "surface_styles": "Flat solid surfaces. NO heavy glassmorphism for health/industrial tools to prevent refraction of data. Max 2px border radius (rounded-sm) or perfectly sharp (rounded-none).",
+    "map_grid": "The warehouse is a 30x30 grid. The CSS grid should be `grid-cols-[30]`. Use a wrapper with `overflow-auto` allowing the user to scroll through the massive facility, or use scale transforms for a zoom effect."
+  },
+  "components": {
+    "buttons": "Sharp corners, no shadows. Primary: bg-[#FF3B30] text-white hover:bg-[#D32F2F] transition-colors. Secondary: bg-transparent border border-zinc-700 hover:bg-zinc-800.",
+    "inputs": "Flat, bg-zinc-950 border border-zinc-800 focus:border-[#007AFF] focus:ring-1 focus:ring-[#007AFF] transition-all rounded-none font-mono text-sm.",
+    "tables": "Dense, highly legible. Use JetBrains Mono for numbers. Hover states on rows must be a slight lightness bump (bg-zinc-800/50).",
+    "iot_nodes": "Small rounded-full indicators. Pulse animation for active nodes.",
+    "map_cells": "Empty cells: `border border-zinc-900 bg-zinc-950`. Stocked shelves: `border border-zinc-700 bg-zinc-800`. Target item: `bg-yellow-500`. Shortest Path: `bg-[#00E5FF] shadow-[0_0_10px_#00E5FF]`."
+  },
+  "motion": {
+    "hover": "Instant or 150ms transitions (industrial interfaces should feel fast and immediate, no sluggish easing).",
+    "path_animation": "When a shortest path is found, stagger the appearance of the path blocks by 50ms using Framer Motion or simple timeout to simulate a radar 'tracing' the route.",
+    "alerts": "Use Sonner toasts that slide in sharply from bottom right. Sharp borders, black backgrounds."
+  },
+  "image_urls": {
+    "pitch_hero": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/6e7169ea-9d6b-48da-986c-17563de31962/images/79a83b169945daa699b18f51f246a1e62536718ff352d822baacaf39eced8f66.png",
+      "category": "Hero Background (Login/Pitch overlay)",
+      "description": "Wide-angle architectural rendering of a massive, dark industrial metal warehouse at night. Use as a low-opacity background behind a login/pitch entry screen with a gradient overlay."
+    },
+    "metal_texture": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/6e7169ea-9d6b-48da-986c-17563de31962/images/44475a848b5efab76d5f13d7e68921d3b2850c82923a0474ac5a83e3d2baa7a4.png",
+      "category": "Panel Backgrounds or Data Empty States",
+      "description": "Macro photography of dark brushed steel plates stacked together. Good for decorative accents or sidebar headers."
+    },
+    "raw_metal_texture": {
+      "url": "https://images.unsplash.com/photo-1709617101980-20e8a609550f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzV8MHwxfHNlYXJjaHwyfHxkYXJrJTIwYnJ1c2hlZCUyMHN0ZWVsJTIwbWV0YWwlMjB0ZXh0dXJlfGVufDB8fHx8MTc3NDY4NzE2MHww&ixlib=rb-4.1.0&q=85",
+      "category": "Subtle Textures",
+      "description": "Shiny dark metal surface. Can be used for overlay blends (mix-blend-overlay) on structural elements."
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. IMPLEMENT A DARK THEME EXCLUSIVELY: Add a massive CSS grid (`grid-cols-[30]`) for the 2D warehouse map. Ensure the map container has `overflow-auto` and a fixed height (e.g., `h-[60vh]`) so the 30x30 grid doesn't break the layout.",
+    "2. SYNTHETIC DATA GENERATOR: Create a 'Mock/Generate Data' button that fills the 900-cell grid with random metal sheet objects (about 500 sheets). An object should have: ID, Type (Aluminum, Steel, Copper), Size, Weight, Thickness, Material Grade, Location (x,y), and Stock Qty.",
+    "3. SEARCH & LOCATE: Provide a search panel. If duplicates are found, offer two UI states: 'Auto-select Nearest' (calculates distance from Worker Location to all targets and draws shortest path) or 'Show All' (highlights multiple cells). Default Worker Location is (0,0) or a draggable marker.",
+    "4. SHORTEST PATH LOGIC: Implement a basic Manhattan distance or A* pathfinding algorithm over the 30x30 grid to return an array of coordinate objects from Worker (0,0) to the Target (X,Y). Highlight these coordinates in the map grid in Cyan (#00E5FF).",
+    "5. DATA-TESTID: ALL buttons, search inputs, grid cells, and duplicate toggles MUST have `data-testid` attributes.",
+    "6. USE SHADCN UI: Incorporate shadcn/ui Select, Input, Button, Table, and Toast (sonner), but override radii to `rounded-sm` or `rounded-none`. Use `JetBrains Mono` for the data table."
+  ]
+}
