@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { ChevronUp, ChevronDown, Eye, Navigation } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ChevronUp, ChevronDown, Eye, Navigation, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { Badge } from './ui/badge';
@@ -7,6 +7,8 @@ import { Badge } from './ui/badge';
 export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSheet }) => {
   const [sortField, setSortField] = useState('sheet_id');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const sortedSheets = useMemo(() => {
     if (!sheets) return [];
@@ -17,15 +19,29 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
 
       if (typeof aVal === 'string') {
         aVal = aVal.toLowerCase();
-        bVal = bVal.toLowerCase();
+        bVal = typeof bVal === 'string' ? bVal.toLowerCase() : bVal;
       }
+
+      if (aVal === bVal) return 0;
 
       if (sortDirection === 'asc') {
         return aVal > bVal ? 1 : -1;
       }
+
       return aVal < bVal ? 1 : -1;
     });
   }, [sheets, sortField, sortDirection]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedSheets.length / pageSize));
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentSheets = sortedSheets.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const handleSort = (field) => {
     if (sortField === field) {
@@ -34,6 +50,12 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
       setSortField(field);
       setSortDirection('asc');
     }
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (e) => {
+    setPageSize(Number(e.target.value));
+    setCurrentPage(1);
   };
 
   const SortIcon = ({ field }) => {
@@ -56,6 +78,24 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
     }
   };
 
+  const getVisiblePages = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let page = start; page <= end; page += 1) {
+      pages.push(page);
+    }
+
+    return pages;
+  };
+
   if (!sheets || sheets.length === 0) {
     return (
       <div className="inventory-section" data-testid="inventory-table">
@@ -68,22 +108,43 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
     );
   }
 
-  const previewSheets = sortedSheets.slice(0, 100);
+  const visiblePages = getVisiblePages();
 
   return (
     <div className="inventory-section" data-testid="inventory-table">
-      <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="inventory-header">
         <div>
           <h3 className="font-heading text-lg font-bold">Inventory</h3>
           <p className="text-sm text-zinc-500">Tap a sheet to view or navigate.</p>
         </div>
-        <span className="text-sm text-zinc-500 font-mono">{sheets.length} items</span>
+      </div>
+
+      <div className="inventory-toolbar">
+        <div className="inventory-toolbar-inline">
+          <span className="inventory-page-size-label">Show</span>
+
+          <select
+            value={pageSize}
+            onChange={handlePageSizeChange}
+            className="inventory-page-select"
+            data-testid="page-size-select"
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+
+      
+            Showing <strong>{startIndex + 1}</strong>–<strong>{Math.min(endIndex, sortedSheets.length)}</strong> of <strong>{sortedSheets.length}</strong>
+      
+        </div>
       </div>
 
       <div className="mobile-only">
         <ScrollArea className="h-[560px] pr-1">
           <div className="inventory-cards">
-            {previewSheets.map((sheet) => (
+            {currentSheets.map((sheet) => (
               <div
                 key={sheet.id}
                 className={`inventory-card ${selectedSheet?.id === sheet.id ? 'selected' : ''}`}
@@ -148,12 +209,6 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
               </div>
             ))}
           </div>
-
-          {sheets.length > 100 && (
-            <div className="text-center py-4 text-sm text-zinc-500">
-              Showing 100 of {sheets.length} items
-            </div>
-          )}
         </ScrollArea>
       </div>
 
@@ -189,8 +244,9 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
                   <th className="text-center">Actions</th>
                 </tr>
               </thead>
+
               <tbody>
-                {previewSheets.map((sheet) => (
+                {currentSheets.map((sheet) => (
                   <tr
                     key={sheet.id}
                     className={selectedSheet?.id === sheet.id ? 'bg-cyan-500/10' : ''}
@@ -236,13 +292,73 @@ export const InventoryTable = ({ sheets, onSelectSheet, onNavigateTo, selectedSh
               </tbody>
             </table>
           </div>
-
-          {sheets.length > 100 && (
-            <div className="text-center py-4 text-sm text-zinc-500">
-              Showing 100 of {sheets.length} items
-            </div>
-          )}
         </ScrollArea>
+      </div>
+
+      <div className="inventory-pagination">
+        <Button
+          variant="ghost"
+          className="inventory-pagination-btn"
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          data-testid="pagination-prev"
+        >
+          <ChevronLeft className="h-4 w-4 mr-1" />
+          Prev
+        </Button>
+
+        <div className="inventory-pagination-pages">
+          {visiblePages[0] > 1 && (
+            <>
+              <button
+                type="button"
+                className={`inventory-page-btn ${currentPage === 1 ? 'active' : ''}`}
+                onClick={() => setCurrentPage(1)}
+              >
+                1
+              </button>
+              {visiblePages[0] > 2 && <span className="inventory-page-dots">…</span>}
+            </>
+          )}
+
+          {visiblePages.map((page) => (
+            <button
+              key={page}
+              type="button"
+              className={`inventory-page-btn ${currentPage === page ? 'active' : ''}`}
+              onClick={() => setCurrentPage(page)}
+              data-testid={`pagination-page-${page}`}
+            >
+              {page}
+            </button>
+          ))}
+
+          {visiblePages[visiblePages.length - 1] < totalPages && (
+            <>
+              {visiblePages[visiblePages.length - 1] < totalPages - 1 && (
+                <span className="inventory-page-dots">…</span>
+              )}
+              <button
+                type="button"
+                className={`inventory-page-btn ${currentPage === totalPages ? 'active' : ''}`}
+                onClick={() => setCurrentPage(totalPages)}
+              >
+                {totalPages}
+              </button>
+            </>
+          )}
+        </div>
+
+        <Button
+          variant="ghost"
+          className="inventory-pagination-btn"
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          data-testid="pagination-next"
+        >
+          Next
+          <ChevronRight className="h-4 w-4 ml-1" />
+        </Button>
       </div>
     </div>
   );
