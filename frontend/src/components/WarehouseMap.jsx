@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Crosshair, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Crosshair, ZoomIn, ZoomOut, RotateCcw, LocateFixed, MapPinned } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   Tooltip,
@@ -21,6 +21,7 @@ export const WarehouseMap = ({
   loading
 }) => {
   const [zoom, setZoom] = useState(1);
+  const mapBodyRef = useRef(null);
 
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.2, 2));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.2, 0.7));
@@ -98,6 +99,78 @@ export const WarehouseMap = ({
     onWorkerDrag && onWorkerDrag({ x, y });
   };
 
+  const centerOnPosition = useCallback((position) => {
+    if (!position || !mapBodyRef.current) return;
+
+    const cell = mapBodyRef.current.querySelector(
+      `[data-testid="grid-cell-${position.x}-${position.y}"]`
+    );
+
+    if (!cell) return;
+
+    const container = mapBodyRef.current;
+    const cellLeft = cell.offsetLeft * zoom;
+    const cellTop = cell.offsetTop * zoom;
+    const cellWidth = cell.offsetWidth * zoom;
+    const cellHeight = cell.offsetHeight * zoom;
+
+    const targetScrollLeft = cellLeft - container.clientWidth / 2 + cellWidth / 2;
+    const targetScrollTop = cellTop - container.clientHeight / 2 + cellHeight / 2;
+
+    container.scrollTo({
+      left: Math.max(0, targetScrollLeft),
+      top: Math.max(0, targetScrollTop),
+      behavior: 'smooth'
+    });
+  }, [zoom]);
+
+  const getRandomWalkablePosition = useCallback(() => {
+    const candidates = [];
+
+    for (let y = 0; y < GRID_SIZE; y += 1) {
+      for (let x = 0; x < GRID_SIZE; x += 1) {
+        const cellType = getCellType(x, y);
+        if (cellType === 'aisle' || cellType === 'empty') {
+          candidates.push({ x, y });
+        }
+      }
+    }
+
+    if (candidates.length === 0) return null;
+
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    return candidates[randomIndex];
+  }, [getCellType]);
+
+  const handleRandomLocate = () => {
+    const randomPosition = getRandomWalkablePosition();
+    if (!randomPosition) return;
+
+    onWorkerDrag && onWorkerDrag(randomPosition);
+
+    setTimeout(() => {
+      centerOnPosition(randomPosition);
+    }, 120);
+  };
+
+  const handleResetAndFocusWorker = () => {
+    setZoom(1);
+
+    setTimeout(() => {
+      centerOnPosition(workerPosition);
+    }, 120);
+  };
+
+  useEffect(() => {
+    if (workerPosition) {
+      const timer = setTimeout(() => {
+        centerOnPosition(workerPosition);
+      }, 120);
+
+      return () => clearTimeout(timer);
+    }
+  }, [workerPosition, centerOnPosition]);
+
   const renderCell = (x, y) => {
     const cellType = getCellType(x, y);
     const sheetInfo = getSheetInfo(x, y);
@@ -149,8 +222,8 @@ export const WarehouseMap = ({
 
   const renderGrid = () => {
     const cells = [];
-    for (let y = 0; y < GRID_SIZE; y++) {
-      for (let x = 0; x < GRID_SIZE; x++) {
+    for (let y = 0; y < GRID_SIZE; y += 1) {
+      for (let x = 0; x < GRID_SIZE; x += 1) {
         cells.push(renderCell(x, y));
       }
     }
@@ -168,6 +241,23 @@ export const WarehouseMap = ({
         </div>
 
         <div className="map-actions">
+          <div className="current-location-chip">
+            <MapPinned className="h-4 w-4 text-cyan-400" />
+            <span className="text-xs font-mono text-zinc-300">
+              Current: ({workerPosition?.x ?? 0}, {workerPosition?.y ?? 0})
+            </span>
+          </div>
+
+          <Button
+            variant="outline"
+            onClick={handleRandomLocate}
+            className="map-action-btn bg-transparent border-zinc-700 hover:bg-zinc-800"
+            data-testid="random-locate-btn"
+          >
+            <LocateFixed className="h-4 w-4 mr-2" />
+            Locate Me
+          </Button>
+
           <Button
             variant="outline"
             size="icon"
@@ -195,9 +285,10 @@ export const WarehouseMap = ({
           <Button
             variant="outline"
             size="icon"
-            onClick={handleResetZoom}
+            onClick={handleResetAndFocusWorker}
             className="h-10 w-10 bg-transparent border-zinc-700 hover:bg-zinc-800"
-            data-testid="reset-zoom-btn"
+            data-testid="reset-focus-btn"
+            title="Reset and focus worker"
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
@@ -211,10 +302,10 @@ export const WarehouseMap = ({
       )}
 
       <div className="map-help-text">
-        Tap shelves to select. Tap aisles to move worker. Long-press or right-click anywhere to place worker faster.
+        Tap shelves to select. Tap aisles to move worker. Use <strong>Locate Me</strong> to place the worker in a random valid location.
       </div>
 
-      <div className="map-body">
+      <div className="map-body" ref={mapBodyRef}>
         <div
           className="map-grid-frame"
           style={{ transform: `scale(${zoom})`, transformOrigin: 'top left' }}

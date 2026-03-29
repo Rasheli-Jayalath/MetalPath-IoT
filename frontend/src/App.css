@@ -754,3 +754,32 @@
     justify-content: center;
   }
 }
+
+.current-location-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #27272A;
+  border-radius: 12px;
+  background: rgba(18, 18, 18, 0.95);
+}
+
+.map-action-btn {
+  min-height: 40px;
+  padding: 0 0.95rem;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .current-location-chip {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .map-action-btn {
+    flex: 1 1 auto;
+  }
+}

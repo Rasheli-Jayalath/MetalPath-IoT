@@ -16,7 +16,7 @@ export const Header = ({ onGenerateData, loading, hasData }) => {
           </div>
           <div>
             <h1 className="font-heading text-xl font-black tracking-tight">
-              MetalPath<span className="text-cyan-400">IoT</span>
+              Metal<span className="text-cyan-400">Ops</span>
             </h1>
             <p className="text-xs text-zinc-500 hidden sm:block">
               Warehouse Sheet Locator & Navigation System
@@ -38,7 +38,7 @@ export const Header = ({ onGenerateData, loading, hasData }) => {
             data-testid="generate-data-btn"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            {hasData ? 'Regenerate Data' : 'Generate Synthetic Data'}
+            {hasData ? 'Regehjhnerate Data' : 'Generate Synthetic Data'}
           </Button>
         </div>
       </div>

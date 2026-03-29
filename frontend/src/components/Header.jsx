@@ -16,7 +16,7 @@ export const Header = ({ onGenerateData, loading, hasData }) => {
 
           <div className="min-w-0">
             <h1 className="font-heading truncate text-lg font-black tracking-tight sm:text-xl">
-              MetalPath<span className="text-cyan-400">IoT</span>
+              Metal<span className="text-cyan-400">Ops</span>
             </h1>
             <p className="hidden text-xs text-zinc-500 sm:block md:text-sm">
               Warehouse Sheet Locator & Navigation System
